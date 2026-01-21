@@ -40,7 +40,7 @@
 ## 依赖要求
 
 ```go
-module github.com/xingshen/go-stream
+module github.com/xingshen-z/go-stream
 
 go 1.21
 ```
@@ -48,13 +48,13 @@ go 1.21
 ### 安装
 
 ```bash
-go get github.com/xingshen/go-stream
+go get github.com/xingshen-z/go-stream
 ```
 
 ### 导入
 
 ```go
-import "github.com/xingshen/go-stream/stream"
+import "github.com/xingshen-z/go-stream/stream"
 ```
 
 ---
