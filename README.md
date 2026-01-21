@@ -14,7 +14,7 @@ A powerful and expressive stream processing library for Go, inspired by Java Str
 ## Installation
 
 ```bash
-go get github.com/xingshen/go-stream
+go get github.com/xingshen-z/go-stream
 ```
 
 ## Quick Start
