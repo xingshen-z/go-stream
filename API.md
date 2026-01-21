@@ -1911,5 +1911,5 @@ panic: runtime error: invalid memory address or nil pointer dereference
 ## 联系方式
 
 如有问题或建议，请通过以下方式联系：
-- GitHub: https://github.com/xingshen/go-stream
-- Issues: https://github.com/xingshen/go-stream/issues
+- GitHub: https://github.com/xingshen-z/go-stream
+- Issues: https://github.com/xingshen-z/go-stream/issues
