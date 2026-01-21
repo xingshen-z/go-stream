@@ -32,7 +32,7 @@
 | 项目 | 版本 |
 |------|------|
 | Go 版本要求 | 1.21+ |
-| 模块名称 | github.com/xingshen/go-stream |
+| 模块名称 | github.com/xingshen-z/go-stream |
 | 当前版本 | 1.0.0 |
 
 ---
@@ -1510,7 +1510,7 @@ package main
 
 import (
     "fmt"
-    "github.com/xingshen/go-stream/stream"
+    "github.com/xingshen-z/go-stream/stream"
 )
 
 func main() {
@@ -1532,7 +1532,7 @@ package main
 
 import (
     "fmt"
-    "github.com/xingshen/go-stream/stream"
+    "github.com/xingshen-z/go-stream/stream"
 )
 
 func main() {
@@ -1554,7 +1554,7 @@ package main
 
 import (
     "fmt"
-    "github.com/xingshen/go-stream/stream"
+    "github.com/xingshen-z/go-stream/stream"
 )
 
 type Person struct {
@@ -1598,7 +1598,7 @@ package main
 
 import (
     "fmt"
-    "github.com/xingshen/go-stream/stream"
+    "github.com/xingshen-z/go-stream/stream"
 )
 
 func main() {
@@ -1634,7 +1634,7 @@ package main
 
 import (
     "fmt"
-    "github.com/xingshen/go-stream/stream"
+    "github.com/xingshen-z/go-stream/stream"
 )
 
 func main() {
@@ -1665,7 +1665,7 @@ package main
 
 import (
     "fmt"
-    "github.com/xingshen/go-stream/stream"
+    "github.com/xingshen-z/go-stream/stream"
 )
 
 func main() {
@@ -1699,7 +1699,7 @@ package main
 
 import (
     "fmt"
-    "github.com/xingshen/go-stream/stream"
+    "github.com/xingshen-z/go-stream/stream"
     "math/rand"
     "time"
 )
@@ -1732,7 +1732,7 @@ package main
 
 import (
     "fmt"
-    "github.com/xingshen/go-stream/stream"
+    "github.com/xingshen-z/go-stream/stream"
 )
 
 type Product struct {

@@ -1,3 +1,3 @@
-module github.com/xingshen/go-stream
+module github.com/xingshen-z/go-stream
 
 go 1.21

@@ -24,7 +24,7 @@ package main
 
 import (
     "fmt"
-    "github.com/xingshen/go-stream/stream"
+    "github.com/xingshen-z/go-stream/stream"
 )
 
 func main() {
