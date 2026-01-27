@@ -40,7 +40,8 @@ func newStream[T any](source []T) Stream[T] {
 func (s *streamImpl[T]) Filter(predicate Predicate[T]) Stream[T] {
 	s.checkNotConsumed()
 	s.operations = append(s.operations, func(items []T) []T {
-		result := make([]T, 0)
+		// 预分配切片容量，最坏情况与原切片大小相同
+		result := make([]T, 0, len(items))
 		for _, item := range items {
 			if predicate(item) {
 				result = append(result, item)
@@ -66,7 +67,8 @@ func (s *streamImpl[T]) Map(mapper Function[T, T]) Stream[T] {
 func (s *streamImpl[T]) FlatMap(mapper Function[T, Stream[T]]) Stream[T] {
 	s.checkNotConsumed()
 	s.operations = append(s.operations, func(items []T) []T {
-		result := make([]T, 0)
+		// 预分配切片容量，基于原切片大小估计
+		result := make([]T, 0, len(items))
 		for _, item := range items {
 			stream := mapper(item)
 			result = append(result, stream.ToSlice()...)
@@ -104,14 +106,30 @@ func (s *streamImpl[T]) Sorted(comparator Comparator[T]) Stream[T] {
 }
 
 func sortSlice[T any](slice []T, comparator Comparator[T]) {
-	n := len(slice)
-	for i := 0; i < n-1; i++ {
-		for j := 0; j < n-i-1; j++ {
-			if comparator(slice[j], slice[j+1]) > 0 {
-				slice[j], slice[j+1] = slice[j+1], slice[j]
-			}
+	quickSort(slice, 0, len(slice)-1, comparator)
+}
+
+func quickSort[T any](slice []T, low, high int, comparator Comparator[T]) {
+	if low < high {
+		pivotIndex := partition(slice, low, high, comparator)
+		quickSort(slice, low, pivotIndex-1, comparator)
+		quickSort(slice, pivotIndex+1, high, comparator)
+	}
+}
+
+func partition[T any](slice []T, low, high int, comparator Comparator[T]) int {
+	pivot := slice[high]
+	i := low - 1
+
+	for j := low; j < high; j++ {
+		if comparator(slice[j], pivot) <= 0 {
+			i++
+			slice[i], slice[j] = slice[j], slice[i]
 		}
 	}
+
+	slice[i+1], slice[high] = slice[high], slice[i+1]
+	return i + 1
 }
 
 func (s *streamImpl[T]) Limit(maxSize int64) Stream[T] {

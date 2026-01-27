@@ -153,6 +153,21 @@ func JoiningWithPrefixSuffix[T any](mapper Function[T, string], delimiter, prefi
 	}
 }
 
+// ToSet 收集器实现
+type setCollector[T comparable] struct{}
+
+func (c setCollector[T]) Collect(items []T) any {
+	result := make(map[T]struct{})
+	for _, item := range items {
+		result[item] = struct{}{}
+	}
+	return result
+}
+
+func ToSet[T comparable]() Collector[T, any, map[T]struct{}] {
+	return setCollector[T]{}
+}
+
 func ToInt[T any](mapper Function[T, int64]) Function[T, int64] {
 	return mapper
 }
