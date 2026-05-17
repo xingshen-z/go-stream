@@ -3,6 +3,7 @@ package stream
 import (
 	"fmt"
 	"strconv"
+	"strings"
 )
 
 type Collector[T, A, R any] interface {
@@ -119,16 +120,16 @@ type joiningCollector[T any] struct {
 }
 
 func (c joiningCollector[T]) Collect(items []T) any {
-	var builder string
-	builder += c.prefix
+	var builder strings.Builder
+	builder.WriteString(c.prefix)
 	for i, item := range items {
 		if i > 0 {
-			builder += c.delimiter
+			builder.WriteString(c.delimiter)
 		}
-		builder += c.mapper(item)
+		builder.WriteString(c.mapper(item))
 	}
-	builder += c.suffix
-	return builder
+	builder.WriteString(c.suffix)
+	return builder.String()
 }
 
 func Joining[T any](delimiter string) Collector[T, any, string] {

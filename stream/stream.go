@@ -9,6 +9,8 @@ type Stream[T any] interface {
 	Limit(maxSize int64) Stream[T]
 	Skip(n int64) Stream[T]
 	Peek(consumer Consumer[T]) Stream[T]
+	TakeWhile(predicate Predicate[T]) Stream[T]
+	DropWhile(predicate Predicate[T]) Stream[T]
 
 	ForEach(consumer Consumer[T])
 	Collect(collector Collector[T, any, any]) any
@@ -19,6 +21,8 @@ type Stream[T any] interface {
 	NoneMatch(predicate Predicate[T]) bool
 	FindFirst() Optional[T]
 	FindAny() Optional[T]
+	Max(comparator Comparator[T]) Optional[T]
+	Min(comparator Comparator[T]) Optional[T]
 	ToSlice() []T
 
 	execute() []T
@@ -82,12 +86,44 @@ func (s *streamImpl[T]) Distinct() Stream[T] {
 	s.checkNotConsumed()
 	s.operations = append(s.operations, func(items []T) []T {
 		seen := make(map[any]bool)
-		result := make([]T, 0)
+		result := make([]T, 0, len(items))
 		for _, item := range items {
 			if !seen[item] {
 				seen[item] = true
 				result = append(result, item)
 			}
+		}
+		return result
+	})
+	return s
+}
+
+func (s *streamImpl[T]) TakeWhile(predicate Predicate[T]) Stream[T] {
+	s.checkNotConsumed()
+	s.operations = append(s.operations, func(items []T) []T {
+		var result []T
+		for _, item := range items {
+			if !predicate(item) {
+				break
+			}
+			result = append(result, item)
+		}
+		return result
+	})
+	return s
+}
+
+func (s *streamImpl[T]) DropWhile(predicate Predicate[T]) Stream[T] {
+	s.checkNotConsumed()
+	s.operations = append(s.operations, func(items []T) []T {
+		var result []T
+		dropping := true
+		for _, item := range items {
+			if dropping && predicate(item) {
+				continue
+			}
+			dropping = false
+			result = append(result, item)
 		}
 		return result
 	})
@@ -224,6 +260,34 @@ func (s *streamImpl[T]) FindFirst() Optional[T] {
 
 func (s *streamImpl[T]) FindAny() Optional[T] {
 	return s.FindFirst()
+}
+
+func (s *streamImpl[T]) Max(comparator Comparator[T]) Optional[T] {
+	items := s.execute()
+	if len(items) == 0 {
+		return EmptyOptional[T]()
+	}
+	max := items[0]
+	for i := 1; i < len(items); i++ {
+		if comparator(items[i], max) > 0 {
+			max = items[i]
+		}
+	}
+	return OfOptional(max)
+}
+
+func (s *streamImpl[T]) Min(comparator Comparator[T]) Optional[T] {
+	items := s.execute()
+	if len(items) == 0 {
+		return EmptyOptional[T]()
+	}
+	min := items[0]
+	for i := 1; i < len(items); i++ {
+		if comparator(items[i], min) < 0 {
+			min = items[i]
+		}
+	}
+	return OfOptional(min)
 }
 
 func (s *streamImpl[T]) ToSlice() []T {
